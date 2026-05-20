@@ -27,7 +27,7 @@ Edit the page text directly in the matching language folder:
 From this folder, run:
 
 ```bash
-npm run preview
+python3 -m http.server 4173
 ```
 
 Then open:
@@ -43,11 +43,11 @@ This is a plain static HTML/CSS/JavaScript website. It is not Vite, React, or Ne
 Use these Vercel settings:
 
 - Framework Preset: `Other`
-- Build Command: `npm run build`
-- Output Directory: `dist`
-- Install Command: leave as default
+- Build Command: leave blank
+- Output Directory: leave blank
+- Install Command: leave blank
 
-The build command copies the current static website into `dist/` for deployment.
+Vercel should deploy the static files directly from the repository root.
 
 ## GitHub Upload
 
@@ -58,8 +58,6 @@ Upload these files and folders to GitHub:
 - `zh/`
 - `assets/`
 - `content/`
-- `scripts/`
-- `package.json`
 - `vercel.json`
 - `.gitignore`
 - `README.md`
@@ -69,6 +67,7 @@ Do not upload:
 - `dist/`
 - `node_modules/`
 - `.DS_Store`
+- `package.json`
 
 ## Domain
 
