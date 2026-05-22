@@ -1,5 +1,5 @@
 (function () {
-  var recipient = "animetroconsulting@gmail.com";
+  var recipient = "mailto:consulting@animetro.ca";
 
   function field(form, name) {
     var element = form.elements[name];
@@ -49,7 +49,7 @@
       var subject = encodeMailtoComponent(subjectFor(language));
       var body = encodeMailtoComponent(formatBody(form, language));
 
-      window.location.href = "mailto:" + recipient + "?subject=" + subject + "&body=" + body;
+      window.location.href = recipient + "?subject=" + subject + "&body=" + body;
     });
   });
 })();

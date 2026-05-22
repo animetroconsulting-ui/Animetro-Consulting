@@ -633,6 +633,13 @@ p {
   line-height: 1.45;
 }
 
+.team-meta {
+  color: var(--navy);
+  font-size: 0.94rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
 .team-card p:not(.team-role) {
   margin-top: 12px;
   font-size: 0.98rem;
@@ -669,6 +676,36 @@ p {
 .zh-contact .page-hero .eyebrow {
   font-size: 1rem;
   font-weight: 650;
+}
+
+.contact-details {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(181, 138, 68, 0.24);
+  border-radius: 8px;
+  background: #fffdf8;
+}
+
+.contact-details p {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 12px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.contact-details p > span:first-child {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.contact-details a,
+.footer-email {
+  color: var(--gold);
+  font-weight: 800;
 }
 
 .qr-grid {
@@ -785,6 +822,7 @@ p {
   width: min(1120px, calc(100% - 32px));
   margin: 0 auto;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
