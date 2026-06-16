@@ -11,34 +11,57 @@
   }
 
   function formatBody(form, language) {
-    var name = field(form, "name");
+    var name = field(form, "parent_name");
     var email = field(form, "email");
-    var grade = field(form, "grade");
-    var message = field(form, "message");
+    var phoneWhatsapp = field(form, "phone_whatsapp");
+    var wechat = field(form, "wechat");
+    var gradeLevel = field(form, "grade_level");
+    var currentSchool = field(form, "current_school");
+    var serviceInterest = field(form, "service_interest");
+    var targetSystem = field(form, "target_system");
+    var mainQuestion = field(form, "main_question");
+    var consultationLanguage = field(form, "consultation_language");
+    var contactMethod = field(form, "contact_method");
 
     if (language === "zh") {
       return [
-        "姓名：" + name,
+        "家长 / 监护人姓名：" + name,
         "電子郵件：" + email,
-        "學生年級：" + grade,
-        "諮詢需求：",
-        message
+        "电话 / WhatsApp：" + phoneWhatsapp,
+        "WeChat ID：" + wechat,
+        "学生年级：" + gradeLevel,
+        "当前学校 / 学校体系：" + currentSchool,
+        "感兴趣的服务：" + serviceInterest,
+        "目标国家或教育体系：" + targetSystem,
+        "偏好的咨询语言：" + consultationLanguage,
+        "偏好的联系方式：" + contactMethod,
+        "",
+        "主要问题或关注点：",
+        mainQuestion
       ].join("\n");
     }
 
     return [
-      "Name: " + name,
+      "Parent / Guardian Name: " + name,
       "Email: " + email,
-      "Student Grade: " + grade,
-      "Message:",
-      message
+      "Phone / WhatsApp: " + phoneWhatsapp,
+      "WeChat ID: " + wechat,
+      "Student's Grade Level: " + gradeLevel,
+      "Current School / School System: " + currentSchool,
+      "Service of Interest: " + serviceInterest,
+      "Target Country or Education System: " + targetSystem,
+      "Preferred Consultation Language: " + consultationLanguage,
+      "Preferred Contact Method: " + contactMethod,
+      "",
+      "Main Question or Concern:",
+      mainQuestion
     ].join("\n");
   }
 
   function subjectFor(language) {
     return language === "zh"
-      ? "艾美加教育顾问私人諮詢"
-      : "Animetro Consulting Private Consultation";
+      ? "艾美加教育顾问免费私人咨询"
+      : "Book a Free Private Consultation";
   }
 
   document.querySelectorAll("[data-contact-form]").forEach(function (form) {
