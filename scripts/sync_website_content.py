@@ -33,11 +33,15 @@ def load_rows() -> dict[str, dict[str, str]]:
                 key = raw[3] if len(raw) > 3 else ""
                 en = raw[4] if len(raw) > 4 else ""
                 zh = raw[5] if len(raw) > 5 else ""
+                section_id = raw[6] if len(raw) > 6 else ""
+                button = raw[7] if len(raw) > 7 else ""
                 link = raw[8] if len(raw) > 8 else ""
                 image = raw[9] if len(raw) > 9 else ""
                 status = raw[10] if len(raw) > 10 else ""
             else:
                 page, section, key, en, zh = raw[:5]
+                section_id = raw[5] if len(raw) > 5 else ""
+                button = raw[6] if len(raw) > 6 else ""
                 link = raw[7] if len(raw) > 7 else ""
                 image = raw[8] if len(raw) > 8 else ""
                 status = raw[9] if len(raw) > 9 else ""
@@ -49,6 +53,8 @@ def load_rows() -> dict[str, dict[str, str]]:
                 "section": section,
                 "en": en,
                 "zh": zh,
+                "section_id": section_id,
+                "button": button,
                 "status": status,
                 "link": link,
                 "image": image,
@@ -62,6 +68,44 @@ ROWS = load_rows()
 def text(key: str, lang: str, fallback: str = "") -> str:
     row = ROWS.get(key, {})
     return row.get(lang, "") or fallback
+
+
+def service_href(lang: str, section_id: str, link: str = "") -> str:
+    if link:
+        target = link.strip()
+        if target.startswith("http://") or target.startswith("https://") or target.startswith("/"):
+            return target
+        if "#" in target:
+            anchor = target.split("#", 1)[1]
+            return f"/{lang}/services/#{anchor}"
+    return f"/{lang}/services/#{section_id}"
+
+
+def home_core_services(lang: str) -> list[dict[str, str]]:
+    is_en = lang == "en"
+    allowlist = [
+        ("strategic-planning", "service_education_strategy_title", "Education Strategy", "教育规划与整体战略"),
+        ("elite-private-school", "service_prep_title", "Prep School Admissions", "贵族私校申请"),
+        ("school-visit-interview", "school_visit_title", "School Visit & Interview Preparation", "学校参观与面试准备"),
+        ("university-application", "service_university_title", "University Admissions", "大学申请"),
+        ("gpa-management", "service_gpa_title", "GPA Management", "GPA 管理"),
+        ("steam-pathway", "steam_title", "STEAM Pathway", "STEM/STEAM 规划"),
+        ("student-athlete", "athlete_title", "Student-Athlete Planning", "学生运动员规划"),
+        ("gifted-diverse-learning", "gifted_title", "Gifted & Neurodiversity Support", "资优与神经多样化支持"),
+        ("mental-health-support", "mental_health_title", "Student Mental Health Support", "学生心理健康支持"),
+        ("short-term-guardianship", "guardianship_title", "Short-Term Guardianship", "短期监护/寄宿监护"),
+    ]
+    services: list[dict[str, str]] = []
+    for section_id, key, *home_label in allowlist:
+        row = ROWS.get(key, {})
+        if row.get("status") and row.get("status") != "Approved":
+            continue
+        label = home_label[0 if is_en else 1] if home_label else text(key, lang)
+        if not label:
+            continue
+        href = service_href(lang, row.get("section_id") or section_id, row.get("link", ""))
+        services.append({"title": label, "href": href})
+    return services
 
 
 def replace_between(source: str, start_pattern: str, end_pattern: str, replacement: str) -> str:
@@ -93,26 +137,12 @@ def hero_section(lang: str) -> str:
     core_title = "Core Services" if is_en else "核心服務"
     learn = "Learn More" if is_en else "了解更多"
 
-    home_core_services = [
-        ("strategic-planning", "Education Strategy", "全方位戰略教育規劃"),
-        ("elite-private-school", "Prep School Admissions", "私校申請"),
-        ("school-visit-interview", "School Visit & Interview Preparation", "訪校與面試準備"),
-        ("university-application", "University Admissions", "大學申請"),
-        ("gpa-management", "GPA Management", "GPA 管理"),
-        ("steam-pathway", "STEAM Pathway", "STEAM 路徑"),
-        ("student-athlete", "Student-Athlete Planning", "學生運動員規劃"),
-        ("gifted-diverse-learning", "Gifted & Neurodiversity Support", "天賦與神經多元支持"),
-        ("mental-health-support", "Student Mental Health Support", "學生心理健康支持"),
-        ("short-term-guardianship", "Short-Term Guardianship", "短期監護"),
-    ]
     items = []
-    for anchor, en_label, zh_label in home_core_services:
-        label = en_label if is_en else zh_label
-        href = f"/{lang}/services/#{anchor}"
+    for service in home_core_services(lang):
         items.append(
             f"""            <li>
-              <a href="{href}">
-                <span>{esc(label)}</span>
+              <a href="{esc(service["href"])}">
+                <span>{esc(service["title"])}</span>
                 <span class="learn-more">{learn}</span>
               </a>
             </li>"""
