@@ -520,6 +520,28 @@ p {
   padding: 72px 0 34px;
 }
 
+.section-image,
+.service-image {
+  margin: 0 0 20px;
+  overflow: hidden;
+  border: 1px solid rgba(181, 138, 68, 0.22);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 18px 42px rgba(31, 45, 77, 0.08);
+}
+
+.section-image img,
+.service-image img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 26vw, 320px);
+  object-fit: cover;
+}
+
+.resource-category > .section-image {
+  margin-top: 18px;
+}
+
 .service-list {
   display: grid;
   gap: 18px;
