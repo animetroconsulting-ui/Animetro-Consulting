@@ -538,6 +538,10 @@ p {
   object-fit: cover;
 }
 
+.service-image img {
+  object-position: top center;
+}
+
 .resource-category > .section-image {
   margin-top: 18px;
 }
