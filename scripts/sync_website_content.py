@@ -135,6 +135,7 @@ def hero_section(lang: str) -> str:
     primary_link = "/en/contact/" if is_en else "contact/"
     secondary_link = "/en/services/" if is_en else "services/"
     core_title = "Core Services" if is_en else "核心服務"
+    primary_label = "Book a Free Private Consultation" if is_en else "预约免费私人咨询"
     items = []
     for service in home_core_services(lang):
         items.append(
@@ -154,7 +155,7 @@ def hero_section(lang: str) -> str:
           <h1>{esc(text("hero_title", lang))}</h1>
           <p class="lead">{esc(text("hero_subtitle", lang))}</p>
           <div class="actions">
-            <a class="button" href="{primary_link}">{esc(text("hero_primary_cta", lang))}</a>
+            <a class="button" href="{primary_link}">{esc(primary_label)}</a>
             <a class="button secondary" href="{secondary_link}">{esc(text("hero_secondary_cta", lang))}</a>
           </div>
         </div>
@@ -175,6 +176,7 @@ def why_process_testimonials_contact(lang: str) -> str:
     contact_href = "/en/contact/" if is_en else "contact/"
     services_href = "/en/services/" if is_en else "services/"
     services_label = "Explore Services" if is_en else "查看完整服務"
+    contact_label = "Book a Free Private Consultation" if is_en else "预约免费私人咨询"
 
     why_cards = "\n".join(
         f"""            <article class="why-card">
@@ -266,7 +268,7 @@ def why_process_testimonials_contact(lang: str) -> str:
             <h2>{esc(text("contact_cta_title", lang))}</h2>
           </div>
           <div class="actions">
-            <a class="button" href="{contact_href}">{esc(text("contact_cta_button", lang))}</a>
+            <a class="button" href="{contact_href}">{esc(contact_label)}</a>
             <a class="button secondary" href="{services_href}">{esc(services_label)}</a>
           </div>
         </div>
