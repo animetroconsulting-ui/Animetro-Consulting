@@ -135,15 +135,12 @@ def hero_section(lang: str) -> str:
     primary_link = "/en/contact/" if is_en else "contact/"
     secondary_link = "/en/services/" if is_en else "services/"
     core_title = "Core Services" if is_en else "核心服務"
-    learn = "Learn More" if is_en else "了解更多"
-
     items = []
     for service in home_core_services(lang):
         items.append(
             f"""            <li>
               <a href="{esc(service["href"])}">
                 <span>{esc(service["title"])}</span>
-                <span class="learn-more">{learn}</span>
               </a>
             </li>"""
         )
