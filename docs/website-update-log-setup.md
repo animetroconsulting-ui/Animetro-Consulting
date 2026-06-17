@@ -29,6 +29,20 @@ The workflow will create the `Animetro Website Update Log` tab if it does not al
 Date | Page Updated | Section Updated | Change Type | Before | After | Reason for Change | Status | Branch Name | Commit SHA | Pull Request Link | Notes
 ```
 
+The workflow also creates a separate review tab named:
+
+```text
+Codex Change Log
+```
+
+This tab is a conservative reverse-sync path for direct website content edits made in GitHub or Codex. It does not overwrite approved Google Sheet rows. Instead, it appends review rows with this header:
+
+```text
+Date/Time | File Changed | Section/Page | Old Text | New Text | Commit SHA | Changed By
+```
+
+Use this tab to review direct website edits and decide whether those changes should be copied into the approved source-of-truth sheet rows.
+
 ## Keyless Google Sheets Connection
 
 Use Google Cloud Workload Identity Federation. This lets GitHub Actions use the service account without downloading a JSON key.
@@ -40,7 +54,7 @@ PROJECT_ID="hardy-abode-499712-e7"
 REPO="animetroconsulting-ui/Animetro-Consulting"
 POOL_ID="github-actions-pool"
 PROVIDER_ID="animetro-github-provider"
-SERVICE_ACCOUNT="animetro-sheet-logger@hardy-abode-499712-e7.iam.gserviceaaccount.com"
+SERVICE_ACCOUNT="animetro-sheet-logger@hardy-abode-499712-e7.iam.gserviceaccount.com"
 ```
 
 Enable the needed Google APIs:
@@ -85,7 +99,6 @@ gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT" \
   --project="$PROJECT_ID" \
   --role="roles/iam.workloadIdentityUser" \
   --member="principalSet://iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/attribute.repository/${REPO}"
-
 ```
 
 Copy the provider resource name:
@@ -116,6 +129,7 @@ Optional repository variable:
 
 ```text
 WEBSITE_UPDATE_LOG_TAB_NAME = Animetro Website Update Log
+CODEX_CHANGE_LOG_TAB_NAME = Codex Change Log
 ```
 
 ## Automatic Logging
@@ -127,6 +141,16 @@ The workflow runs on:
 - manual test runs from the Actions page
 
 It does not log draft changes, uncommitted files, or work-in-progress branch edits.
+
+For direct website content changes, the workflow also appends rows to `Codex Change Log`. It watches:
+
+- `en/**/index.html`
+- `zh/**/index.html`
+- `index.html`
+- `content/*.csv`
+- `assets/contact.js`
+
+This is intentionally review-only. Google Sheet rows are not overwritten automatically unless a future workflow can match the exact approved row with certainty. If there is uncertainty, the change stays in `Codex Change Log` for manual review.
 
 For each confirmed `main` update, the workflow fills:
 
@@ -190,3 +214,11 @@ After adding the GitHub secrets:
 4. Keep mode as `test-row`.
 
 This appends one safe test row without needing to merge a website change.
+
+To test the direct-content review log, run the same workflow and choose:
+
+```text
+test-codex-change-log
+```
+
+This appends one safe test row to `Codex Change Log`.
