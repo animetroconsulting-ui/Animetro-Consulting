@@ -192,6 +192,33 @@ animetro-sheet-logger@hardy-abode-499712-e7.iam.gserviceaccount.com
 
 The workflow will create the `Animetro Website Update Log` tab and header row if they do not already exist.
 
+The same workflow also creates a review tab named:
+
+```text
+Codex Change Log
+```
+
+This tab is for direct website content edits made in GitHub or Codex. It does not overwrite approved Google Sheet rows. It appends review rows with:
+
+```text
+Date/Time | File Changed | Section/Page | Old Text | New Text | Commit SHA | Changed By
+```
+
+The reverse-sync behavior is intentionally conservative:
+
+- Google Sheet content remains the source of truth.
+- Direct edits to website content files are logged for review.
+- Google Sheet rows are not overwritten automatically unless a future workflow can match a row with certainty.
+- If there is uncertainty, the change is logged in `Codex Change Log` instead of replacing approved sheet content.
+
+The review log watches direct changes to:
+
+- `en/**/index.html`
+- `zh/**/index.html`
+- `index.html`
+- `content/*.csv`
+- `assets/contact.js`
+
 ### 2. Connect GitHub Actions Without a JSON Key
 
 Use Google Cloud Workload Identity Federation. This lets GitHub Actions use the service account without downloading a JSON key.
@@ -276,11 +303,12 @@ Optional repository variable:
 
 ```text
 WEBSITE_UPDATE_LOG_TAB_NAME = Animetro Website Update Log
+CODEX_CHANGE_LOG_TAB_NAME = Codex Change Log
 ```
 
 ### 4. How Automatic Logging Works
 
-The workflow run only on:
+The workflow runs only on:
 
 - pushes to `main`
 - merged pull requests, because GitHub records them as updates to `main`
@@ -336,6 +364,14 @@ After adding the secrets:
 5. Keep mode as `test-row`.
 
 This appends one safe test row without needing to merge a website change.
+
+To test the direct-content review log, choose:
+
+```text
+test-codex-change-log
+```
+
+This appends one safe test row to `Codex Change Log`.
 
 ## Domain
 
