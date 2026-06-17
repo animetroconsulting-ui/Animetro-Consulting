@@ -2,13 +2,21 @@
 from __future__ import annotations
 
 import csv
+import base64
 import html
+import json
+import os
 import re
 import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "content" / "website-content.csv"
+SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets.readonly",
+    "https://www.googleapis.com/auth/drive.readonly",
+]
+DEFAULT_SHEET_TAB_NAME = "Website Copy"
 
 
 def esc(value: str) -> str:
@@ -62,7 +70,125 @@ def load_rows() -> dict[str, dict[str, str]]:
     return rows
 
 
-ROWS = load_rows()
+ROWS: dict[str, dict[str, str]] = {}
+
+
+def load_service_account_info() -> dict:
+    raw = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "").strip()
+    if not raw:
+        raise RuntimeError("Missing GOOGLE_SERVICE_ACCOUNT_JSON environment variable.")
+
+    if raw.startswith("{"):
+        return json.loads(raw)
+
+    try:
+        decoded = base64.b64decode(raw).decode("utf-8")
+        return json.loads(decoded)
+    except Exception as exc:  # noqa: BLE001
+        raise RuntimeError("GOOGLE_SERVICE_ACCOUNT_JSON must be service-account JSON or base64 JSON.") from exc
+
+
+def sheets_service():
+    return google_service("sheets", "v4")
+
+
+def drive_service():
+    return google_service("drive", "v3")
+
+
+def google_service(api_name: str, api_version: str):
+    from google_oauth2 import service_account
+    from googleapiclient.discovery import build
+
+    credentials = service_account.Credentials.from_service_account_info(
+        load_service_account_info(),
+        scopes=SCOPES,
+    )
+    return build(api_name, api_version, credentials=credentials, cache_discovery=False)
+
+
+def get_google_sheet_id() -> str:
+    sheet_id = os.environ.get("GOOGLE_SHEET_ID", "").strip()
+    if not sheet_id:
+        raise RuntimeError("Missing GOOGLE_SHEET_ID environment variable.")
+    return sheet_id
+
+
+def quote_sheet_name(name: str) -> str:
+    return "'" + name.replace("'", "''") + "'"
+
+
+def first_sheet_title(service, spreadsheet_id: str) -> str:
+    spreadsheet = service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+    sheets = spreadsheet.get("sheets", [])
+    if not sheets:
+        raise RuntimeError("Google Sheet has no tabs.")
+    return sheets[0]["properties"]["title"]
+
+
+def read_sheet_values(service, spreadsheet_id: str, tab_name: str) -> list[list[str]]:
+    range_name = quote_sheet_name(tab_name)
+    result = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheet_id,
+        range=range_name,
+    ).execute()
+    return result.get("values", [])
+
+
+def export_google_sheet_to_csv() -> None:
+    if not os.environ.get("GOOGLE_SHEET_ID") and not os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"):
+        return
+
+    service = sheets_service()
+    spreadsheet_id = get_google_sheet_id()
+    tab_name = os.environ.get("GOOGLE_SHEET_TAB_NAME", DEFAULT_SHEET_TAB_NAME).strip() or DEFAULT_SHEET_TAB_NAME
+
+    try:
+        values = read_sheet_values(service, spreadsheet_id, tab_name)
+    except Exception:  # noqa: BLE001
+        if os.environ.get("GOOGLE_SHEET_TAB_NAME"):
+            raise
+        tab_name = first_sheet_title(service, spreadsheet_id)
+        values = read_sheet_values(service, spreadsheet_id, tab_name)
+
+    if not values:
+        raise RuntimeError(f"Google Sheet tab '{tab_name}' is empty.")
+
+    max_columns = max(len(row) for row in values)
+    CONTENT.parent.mkdir(parents=True, exist_ok=True)
+    with CONTENT.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        for row in values:
+            writer.writerow(row + [""] * (max_columns - len(row)))
+    print(f"Exported Google Sheet tab '{tab_name}' to {CONTENT.relative_to(ROOT)}.")
+
+
+def verify_google_drive_folder_access() -> None:
+    folder_id = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "").strip()
+    if not folder_id:
+        return
+    if not os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"):
+        raise RuntimeError("GOOGLE_DRIVE_FOLDER_ID requires GOOGLE_SERVICE_ACCOUNT_JSON.")
+
+    service = drive_service()
+    folder = service.files().get(
+        fileId=folder_id,
+        fields="id,name,mimeType",
+        supportsAllDrives=True,
+    ).execute()
+    if folder.get("mimeType") != "application/vnd.google-apps.folder":
+        raise RuntimeError(f"GOOGLE_DRIVE_FOLDER_ID is not a Google Drive folder: {folder_id}")
+
+    result = service.files().list(
+        q=f"'{folder_id}' in parents and trashed = false",
+        fields="files(id,name,mimeType,modifiedTime)",
+        includeItemsFromAllDrives=True,
+        supportsAllDrives=True,
+        pageSize=100,
+        orderBy="name",
+    ).execute()
+    files = result.get("files", [])
+    print(f"Verified Google Drive folder '{folder.get('name')}' with {len(files)} visible item(s).")
 
 
 def text(key: str, lang: str, fallback: str = "") -> str:
@@ -417,6 +543,11 @@ def sync_dist() -> None:
 
 
 def main() -> None:
+    global ROWS
+
+    export_google_sheet_to_csv()
+    verify_google_drive_folder_access()
+    ROWS = load_rows()
     update_common_headers()
     update_homepage("en")
     update_homepage("zh")
