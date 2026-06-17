@@ -38,7 +38,7 @@ Codex Change Log
 This tab is a conservative reverse-sync path for direct website content edits made in GitHub or Codex. It does not overwrite approved Google Sheet rows. Instead, it appends review rows with this header:
 
 ```text
-Date/Time | File Changed | Section/Page | Old Text | New Text | Commit SHA | Changed By
+Date/Time | File Changed | Section/Page | Old Text | New Text | Commit SHA | Changed By | Action Needed
 ```
 
 Use this tab to review direct website edits and decide whether those changes should be copied into the approved source-of-truth sheet rows.
@@ -151,6 +151,20 @@ For direct website content changes, the workflow also appends rows to `Codex Cha
 - `assets/contact.js`
 
 This is intentionally review-only. Google Sheet rows are not overwritten automatically unless a future workflow can match the exact approved row with certainty. If there is uncertainty, the change stays in `Codex Change Log` for manual review.
+
+The `Sync website content from Google Sheet` workflow also checks for conflicts before exporting Sheet content into the website. If generated website content files were changed more recently than the Google Sheet, the sync will:
+
+- write back a direct `content/website-content.csv` edit only when the content key matches exactly one Google Sheet row
+- append unclear direct edits to `Codex Change Log`
+- stop the sync before older Sheet content can silently overwrite newer Codex/GitHub edits
+
+`Codex Change Log` uses this review header:
+
+```text
+Date/Time | File Changed | Section/Page | Old Text | New Text | Commit SHA | Changed By | Action Needed
+```
+
+The Google Sheet remains the master database, but direct Codex edits are either safely synced back or logged for owner review.
 
 For each confirmed `main` update, the workflow fills:
 
