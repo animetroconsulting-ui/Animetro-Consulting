@@ -15,7 +15,16 @@ from googleapiclient.discovery import build
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 DEFAULT_TAB_NAME = "Codex Change Log"
-HEADERS = ["Date/Time", "File Changed", "Section/Page", "Old Text", "New Text", "Commit SHA", "Changed By"]
+HEADERS = [
+    "Date/Time",
+    "File Changed",
+    "Section/Page",
+    "Old Text",
+    "New Text",
+    "Commit SHA",
+    "Changed By",
+    "Action Needed",
+]
 CONTENT_FILE_PATTERNS = (
     re.compile(r"^(en|zh)(/.*)?/index\.html$"),
     re.compile(r"^index\.html$"),
@@ -144,7 +153,15 @@ def rows_for_push() -> list[list[str]]:
     files = [path for path in changed_files_from_event(payload, sha) if is_content_file(path)]
     timestamp = now_iso()
     return [
-        [timestamp, path, section_page_from_path(path), *changed_text_for_file(sha, path), sha, "Codex"]
+        [
+            timestamp,
+            path,
+            section_page_from_path(path),
+            *changed_text_for_file(sha, path),
+            sha,
+            "Codex",
+            "Review direct website content edit",
+        ]
         for path in files
     ]
 
@@ -158,6 +175,7 @@ def test_row() -> list[str]:
         "New website text example",
         os.environ.get("GITHUB_SHA", ""),
         "Codex",
+        "Review direct website content edit",
     ]
 
 
