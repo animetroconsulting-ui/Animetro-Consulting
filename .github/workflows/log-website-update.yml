@@ -7,12 +7,13 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "Append a safe test row to the website update log."
+        description: "Append a safe test row."
         required: true
         default: test-row
         type: choice
         options:
           - test-row
+          - test-codex-change-log
 
 permissions:
   contents: read
@@ -48,11 +49,19 @@ jobs:
           python -m pip install google-api-python-client google-auth
 
       - name: Append safe test row
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test-row'
         env:
           GOOGLE_SHEET_ID: 1MjWHgypp0SItMQI6AHiUoTAqTzhe8pyeFVUblcnSDTg
           WEBSITE_UPDATE_LOG_TAB_NAME: ${{ vars.WEBSITE_UPDATE_LOG_TAB_NAME || 'Animetro Website Update Log' }}
         run: python scripts/log_website_update.py --mode test-row
+
+      - name: Append safe Codex change log test row
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test-codex-change-log'
+        env:
+          GOOGLE_SHEET_ID: 1MjWHgypp0SItMQI6AHiUoTAqTzhe8pyeFVUblcnSDTg
+          CODEX_CHANGE_LOG_TAB_NAME: ${{ vars.CODEX_CHANGE_LOG_TAB_NAME || 'Codex Change Log' }}
+          CODEX_CHANGE_LOG_MODE: test
+        run: python scripts/log_codex_change_log.py
 
       - name: Append confirmed main update row
         if: github.event_name == 'push'
@@ -61,3 +70,10 @@ jobs:
           WEBSITE_UPDATE_LOG_TAB_NAME: ${{ vars.WEBSITE_UPDATE_LOG_TAB_NAME || 'Animetro Website Update Log' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/log_website_update.py --mode push
+
+      - name: Append direct content changes for review
+        if: github.event_name == 'push'
+        env:
+          GOOGLE_SHEET_ID: 1MjWHgypp0SItMQI6AHiUoTAqTzhe8pyeFVUblcnSDTg
+          CODEX_CHANGE_LOG_TAB_NAME: ${{ vars.CODEX_CHANGE_LOG_TAB_NAME || 'Codex Change Log' }}
+        run: python scripts/log_codex_change_log.py
