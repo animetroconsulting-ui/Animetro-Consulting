@@ -8,15 +8,34 @@ import json
 import os
 import re
 import shutil
+import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "content" / "website-content.csv"
 SCOPES = [
-    "https://www.googleapis.com/auth/spreadsheets.readonly",
+    "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.readonly",
 ]
 DEFAULT_SHEET_TAB_NAME = "Website Copy"
+CODEX_CHANGE_LOG_TAB_NAME = "Codex Change Log"
+CODEX_CHANGE_LOG_HEADERS = [
+    "Date/Time",
+    "File Changed",
+    "Section/Page",
+    "Old Text",
+    "New Text",
+    "Commit SHA",
+    "Changed By",
+    "Action Needed",
+]
+GENERATED_CONTENT_PATTERNS = (
+    re.compile(r"^(en|zh)(/.*)?/index\.html$"),
+    re.compile(r"^index\.html$"),
+    re.compile(r"^content/website-content\.csv$"),
+    re.compile(r"^assets/contact\.js$"),
+)
 
 
 def esc(value: str) -> str:
@@ -97,7 +116,7 @@ def drive_service():
 
 
 def google_service(api_name: str, api_version: str):
-    from google_oauth2 import service_account
+    from google.oauth2 import service_account
     from googleapiclient.discovery import build
 
     credentials = service_account.Credentials.from_service_account_info(
@@ -133,6 +152,297 @@ def read_sheet_values(service, spreadsheet_id: str, tab_name: str) -> list[list[
         range=range_name,
     ).execute()
     return result.get("values", [])
+
+
+def column_letter(count: int) -> str:
+    letters = ""
+    while count:
+        count, remainder = divmod(count - 1, 26)
+        letters = chr(65 + remainder) + letters
+    return letters
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+
+def parse_google_time(value: str) -> datetime:
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def sheet_modified_time() -> datetime | None:
+    if not os.environ.get("GOOGLE_SHEET_ID") or not os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"):
+        return None
+    service = drive_service()
+    metadata = service.files().get(
+        fileId=get_google_sheet_id(),
+        fields="modifiedTime",
+        supportsAllDrives=True,
+    ).execute()
+    modified = metadata.get("modifiedTime")
+    return parse_google_time(modified) if modified else None
+
+
+def run_git(args: list[str]) -> str:
+    result = subprocess.run(["git", *args], cwd=ROOT, check=True, capture_output=True, text=True)
+    return result.stdout.strip()
+
+
+def generated_content_files() -> list[str]:
+    try:
+        files = run_git(["ls-files"]).splitlines()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return []
+    return sorted(path for path in files if any(pattern.match(path) for pattern in GENERATED_CONTENT_PATTERNS))
+
+
+def latest_commit_for_path(path: str) -> tuple[str, datetime, str, str] | None:
+    try:
+        raw = run_git(["log", "-1", "--format=%H%x09%cI%x09%an%x09%s", "--", path])
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    if not raw or raw.count("\t") < 3:
+        return None
+    sha, committed_at, author, subject = raw.split("\t", 3)
+    return sha, parse_google_time(committed_at), author, subject
+
+
+def is_automated_sheet_sync_commit(author: str, subject: str) -> bool:
+    return author == "github-actions[bot]" and subject.startswith("Sync website content from Google Sheet")
+
+
+def generated_files_newer_than_sheet(sheet_time: datetime | None) -> dict[str, tuple[str, datetime]]:
+    if sheet_time is None:
+        return {}
+    newer: dict[str, tuple[str, datetime]] = {}
+    for path in generated_content_files():
+        latest = latest_commit_for_path(path)
+        if latest and latest[1] > sheet_time and not is_automated_sheet_sync_commit(latest[2], latest[3]):
+            newer[path] = (latest[0], latest[1])
+    return newer
+
+
+def section_page_from_path(path: str) -> str:
+    parts = Path(path).parts
+    if not parts:
+        return ""
+    if parts[0] in {"en", "zh"}:
+        language = "English" if parts[0] == "en" else "Chinese"
+        if len(parts) == 2:
+            return f"{language} home"
+        return f"{language} / {'/'.join(parts[1:-1])}"
+    if path == "content/website-content.csv":
+        return "Content source CSV"
+    if path == "index.html":
+        return "Language landing page"
+    if path == "assets/contact.js":
+        return "Contact form behavior/content"
+    return ""
+
+
+def trim_cell(value: str, limit: int = 4500) -> str:
+    value = value.strip()
+    if len(value) <= limit:
+        return value
+    return value[: limit - 20].rstrip() + "\n...[truncated]"
+
+
+def changed_text_for_file(sha: str, path: str) -> tuple[str, str]:
+    try:
+        diff = run_git(["diff", "--unified=0", f"{sha}^", sha, "--", path])
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "", ""
+
+    old_lines = []
+    new_lines = []
+    for line in diff.splitlines():
+        if not line or line.startswith(("---", "+++", "@@")):
+            continue
+        if line.startswith("-"):
+            old_lines.append(line[1:].strip())
+        elif line.startswith("+"):
+            new_lines.append(line[1:].strip())
+    return trim_cell("\n".join(old_lines)), trim_cell("\n".join(new_lines))
+
+
+def ensure_tab_and_headers(service, spreadsheet_id: str, tab_name: str, headers: list[str]) -> None:
+    spreadsheet = service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+    tab = next(
+        (sheet for sheet in spreadsheet.get("sheets", []) if sheet.get("properties", {}).get("title") == tab_name),
+        None,
+    )
+    if tab is None:
+        service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body={"requests": [{"addSheet": {"properties": {"title": tab_name}}}]},
+        ).execute()
+
+    last_column = column_letter(len(headers))
+    header_range = f"{quote_sheet_name(tab_name)}!A1:{last_column}1"
+    result = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=header_range).execute()
+    values = result.get("values", [])
+    if not values or values[0] != headers:
+        service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=header_range,
+            valueInputOption="RAW",
+            body={"values": [headers]},
+        ).execute()
+
+
+def append_codex_change_log(service, spreadsheet_id: str, rows: list[list[str]]) -> None:
+    if not rows:
+        return
+    tab_name = os.environ.get("CODEX_CHANGE_LOG_TAB_NAME", CODEX_CHANGE_LOG_TAB_NAME).strip() or CODEX_CHANGE_LOG_TAB_NAME
+    ensure_tab_and_headers(service, spreadsheet_id, tab_name, CODEX_CHANGE_LOG_HEADERS)
+    last_column = column_letter(len(CODEX_CHANGE_LOG_HEADERS))
+    service.spreadsheets().values().append(
+        spreadsheetId=spreadsheet_id,
+        range=f"{quote_sheet_name(tab_name)}!A:{last_column}",
+        valueInputOption="RAW",
+        insertDataOption="INSERT_ROWS",
+        body={"values": rows},
+    ).execute()
+
+
+def csv_rows_by_key(csv_text: str) -> dict[str, list[str]]:
+    rows: dict[str, list[str]] = {}
+    for raw in csv.reader(csv_text.splitlines()):
+        if len(raw) < 4:
+            continue
+        key = raw[3].strip()
+        if not key or key in {"Key", "Content Key"}:
+            continue
+        rows[key] = raw
+    return rows
+
+
+def current_csv_rows_by_key() -> dict[str, list[str]]:
+    if not CONTENT.exists():
+        return {}
+    return csv_rows_by_key(CONTENT.read_text(encoding="utf-8-sig"))
+
+
+def parent_csv_rows_by_key(sha: str) -> dict[str, list[str]]:
+    try:
+        old_csv = run_git(["show", f"{sha}^:content/website-content.csv"])
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return {}
+    return csv_rows_by_key(old_csv)
+
+
+def row_key_index(values: list[list[str]]) -> dict[str, list[int]]:
+    matches: dict[str, list[int]] = {}
+    for index, row in enumerate(values, start=1):
+        if len(row) < 4:
+            continue
+        key = row[3].strip()
+        if not key or key in {"Key", "Content Key"}:
+            continue
+        matches.setdefault(key, []).append(index)
+    return matches
+
+
+def write_clear_csv_changes_back_to_sheet(
+    service,
+    spreadsheet_id: str,
+    tab_name: str,
+    sheet_values: list[list[str]],
+    csv_sha: str,
+) -> tuple[bool, list[list[str]]]:
+    previous = parent_csv_rows_by_key(csv_sha)
+    current = current_csv_rows_by_key()
+    changed_keys = sorted(key for key, row in current.items() if previous.get(key) != row)
+    if not changed_keys:
+        return True, []
+
+    key_index = row_key_index(sheet_values)
+    unclear_rows: list[list[str]] = []
+    for key in changed_keys:
+        sheet_rows = key_index.get(key, [])
+        if len(sheet_rows) != 1:
+            old_value = "\n".join(previous.get(key, []))
+            new_value = "\n".join(current.get(key, []))
+            unclear_rows.append(
+                [
+                    now_iso(),
+                    "content/website-content.csv",
+                    "Content source CSV",
+                    trim_cell(old_value),
+                    trim_cell(new_value),
+                    csv_sha,
+                    "Codex",
+                    f"Review manually: content key '{key}' does not match exactly one Google Sheet row.",
+                ]
+            )
+            continue
+
+        row_number = sheet_rows[0]
+        row = current[key]
+        last_column = column_letter(len(row))
+        service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=f"{quote_sheet_name(tab_name)}!A{row_number}:{last_column}{row_number}",
+            valueInputOption="RAW",
+            body={"values": [row]},
+        ).execute()
+
+    return not unclear_rows, unclear_rows
+
+
+def protect_newer_codex_changes() -> None:
+    sheet_time = sheet_modified_time()
+    newer = generated_files_newer_than_sheet(sheet_time)
+    if not newer:
+        return
+
+    service = sheets_service()
+    spreadsheet_id = get_google_sheet_id()
+    tab_name = os.environ.get("GOOGLE_SHEET_TAB_NAME", DEFAULT_SHEET_TAB_NAME).strip() or DEFAULT_SHEET_TAB_NAME
+    try:
+        sheet_values = read_sheet_values(service, spreadsheet_id, tab_name)
+    except Exception:  # noqa: BLE001
+        if os.environ.get("GOOGLE_SHEET_TAB_NAME"):
+            raise
+        tab_name = first_sheet_title(service, spreadsheet_id)
+        sheet_values = read_sheet_values(service, spreadsheet_id, tab_name)
+
+    log_rows: list[list[str]] = []
+    csv_latest = newer.pop("content/website-content.csv", None)
+    if csv_latest:
+        synced, unclear_rows = write_clear_csv_changes_back_to_sheet(
+            service,
+            spreadsheet_id,
+            tab_name,
+            sheet_values,
+            csv_latest[0],
+        )
+        log_rows.extend(unclear_rows)
+        if not synced:
+            newer["content/website-content.csv"] = csv_latest
+
+    for path, (sha, _committed_at) in newer.items():
+        old_value, new_value = changed_text_for_file(sha, path)
+        log_rows.append(
+            [
+                now_iso(),
+                path,
+                section_page_from_path(path),
+                old_value,
+                new_value,
+                sha,
+                "Codex",
+                "Review manually: matching Google Sheet row is unclear, so the sync did not overwrite either side.",
+            ]
+        )
+
+    if log_rows:
+        append_codex_change_log(service, spreadsheet_id, log_rows)
+        raise RuntimeError(
+            "Stopped Google Sheet sync because newer direct website content changes need review in Codex Change Log."
+        )
+
+    print("Newer direct CSV content changes were written back to the Google Sheet before sync.")
 
 
 def export_google_sheet_to_csv() -> None:
@@ -545,6 +855,7 @@ def sync_dist() -> None:
 def main() -> None:
     global ROWS
 
+    protect_newer_codex_changes()
     export_google_sheet_to_csv()
     verify_google_drive_folder_access()
     ROWS = load_rows()
