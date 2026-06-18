@@ -27,14 +27,14 @@
     <main>
       <section class="page-hero">
         <p class="eyebrow">聯絡我們</p>
-        <h1>開始你的個性化教育規劃</h1>
-        <p class="lead">聯絡艾美加教育顾问，討論學生目標、申請時間線與下一步規劃。</p>
+        <h1>预约免费私人教育咨询</h1>
+        <p class="lead">与艾美加教育顾问沟通孩子的教育目标、当前挑战与可能的下一步。这个免费私人咨询帮助我们了解家庭需求，并建议更适合的支持方向。</p>
       </section>
 
       <section class="section">
         <div class="contact-panel">
-          <h2>私人諮詢</h2>
-          <p class="lead">請留下基本資訊與學生需求，我們會透過電子郵件與你聯絡。</p>
+          <h2>预约免费私人咨询</h2>
+          <p class="lead">请尽量详细填写以下表格。我们越了解孩子目前的情况与目标，就越能为第一次沟通做好准备。</p>
           <div class="contact-details" aria-label="Animetro contact details">
             <p><span>電話</span><a href="tel:+19059557068">905-955-7068</a></p>
             <p><span>電郵</span><a href="mailto:consulting@animetro.ca">consulting@animetro.ca</a></p>
@@ -50,25 +50,107 @@
               <img src="/assets/images/whatsapp-qr.png" alt="WhatsApp QR code">
             </article>
           </div>
+          <div class="contact-guidance-grid">
+            <section class="contact-guidance">
+              <h2>什么时候适合联系我们</h2>
+              <ul>
+                <li>正在考虑私校、寄宿学校或国际学校选择</li>
+                <li>正在规划加拿大、美国、英国或国际大学申请</li>
+                <li>希望建立长期学业与课外发展规划</li>
+                <li>正在支持资优、2E、ADHD、自闭症或神经多样化学生</li>
+                <li>正在探索学生运动员升学路径</li>
+                <li>需要短期监护或学生照顾支持</li>
+                <li>不确定哪一种教育体系、学校或路径最适合孩子</li>
+              </ul>
+            </section>
+            <section class="contact-guidance">
+              <h2>提交信息后会发生什么</h2>
+              <p>提交咨询表后，我们的团队会查看家庭情况，并联系你安排下一步。</p>
+              <p>在初步沟通中，我们可能会了解：</p>
+              <ul>
+                <li>孩子目前的年级、学校体系与学业背景</li>
+                <li>家庭的教育目标与时间规划</li>
+                <li>目前正在面对的担忧或重要决定</li>
+                <li>艾美加的服务是否适合你的家庭</li>
+                <li>后续规划或咨询的建议方向</li>
+              </ul>
+              <p><strong>我们通常会在 1-2 个工作日内回复咨询。</strong></p>
+            </section>
+          </div>
           <form class="contact-form" data-contact-form data-language="zh" accept-charset="UTF-8">
             <label>
-              家長姓名
-              <input name="name" type="text" autocomplete="name" required>
+              家长 / 监护人姓名
+              <input name="parent_name" type="text" autocomplete="name" required>
             </label>
             <label>
               電子郵件
               <input name="email" type="email" autocomplete="email" required>
             </label>
             <label>
-              學生年級或申請階段
-              <input name="grade" type="text">
+              电话 / WhatsApp
+              <input name="phone_whatsapp" type="text" autocomplete="tel">
             </label>
             <label>
-              諮詢需求
-              <textarea name="message" rows="5" required></textarea>
+              WeChat ID，可选
+              <input name="wechat" type="text">
             </label>
-            <button class="button" type="submit">發送電子郵件</button>
+            <label>
+              学生年级
+              <input name="grade_level" type="text" required>
+            </label>
+            <label>
+              当前学校 / 学校体系
+              <input name="current_school" type="text">
+            </label>
+            <label>
+              感兴趣的服务
+              <select name="service_interest" required>
+                <option value="">请选择</option>
+                <option>Private School Admissions</option>
+                <option>Boarding School Admissions</option>
+                <option>University Admissions Planning</option>
+                <option>GPA / Academic Strategy</option>
+                <option>STEAM / STEM Development</option>
+                <option>Student-Athlete Planning</option>
+                <option>Gifted / 2E / Neurodiverse Student Support</option>
+                <option>Guardianship / Student Care</option>
+                <option>Not Sure Yet</option>
+              </select>
+            </label>
+            <label>
+              目标国家或教育体系
+              <input name="target_system" type="text">
+            </label>
+            <label>
+              主要问题或关注点
+              <textarea name="main_question" rows="5" required></textarea>
+            </label>
+            <label>
+              偏好的咨询语言
+              <select name="consultation_language" required>
+                <option value="">请选择</option>
+                <option>English</option>
+                <option>Mandarin</option>
+                <option>Cantonese</option>
+              </select>
+            </label>
+            <label>
+              偏好的联系方式
+              <select name="contact_method" required>
+                <option value="">请选择</option>
+                <option>Email</option>
+                <option>Phone</option>
+                <option>WhatsApp</option>
+                <option>WeChat</option>
+              </select>
+            </label>
+            <button class="button" type="submit">预约免费私人咨询</button>
           </form>
+          <section class="contact-reassurance">
+            <h2>每个家庭都从一次认真倾听开始</h2>
+            <p>选择合适的教育路径可能会让家庭感到压力，尤其是在比较不同学校体系、国家方向与长期目标时。我们的角色是帮助你更清楚地理解孩子的优势、需求与未来可能性，从而做出更有依据的决定。</p>
+            <p>我们不相信一套方案适合所有学生。每一次咨询，都从倾听开始。</p>
+          </section>
         </div>
       </section>
     </main>
