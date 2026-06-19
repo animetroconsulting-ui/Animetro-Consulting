@@ -571,7 +571,7 @@ def hero_section(lang: str) -> str:
     primary_link = "/en/contact/" if is_en else "contact/"
     secondary_link = "/en/services/" if is_en else "services/"
     core_title = "Core Services" if is_en else "核心服務"
-    primary_label = "Book a Free Private Consultation" if is_en else "预约免费私人咨询"
+    primary_label = "Book a Free Private Consultation" if is_en else "預約一次免費諮詢"
     items = []
     for service in home_core_services(lang):
         items.append(
@@ -612,7 +612,7 @@ def why_process_testimonials_contact(lang: str) -> str:
     contact_href = "/en/contact/" if is_en else "contact/"
     services_href = "/en/services/" if is_en else "services/"
     services_label = "Explore Services" if is_en else "查看完整服務"
-    contact_label = "Book a Free Private Consultation" if is_en else "预约免费私人咨询"
+    contact_label = "Book a Free Private Consultation" if is_en else "預約一次免費諮詢"
 
     why_cards = "\n".join(
         f"""            <article class="why-card">
