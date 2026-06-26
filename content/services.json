@@ -1,0 +1,466 @@
+{
+  "source": {
+    "website_content": "content/website-content.csv",
+    "service_images": "content/service-images.csv",
+    "google_sheet_tabs": [
+      "Website Copy",
+      "Website Images"
+    ]
+  },
+  "status": "In Progress",
+  "services": [
+    {
+      "service_id": "strategic-planning",
+      "title": {
+        "en": "Academic Strategy",
+        "zh": "學術策略"
+      },
+      "subtitle": {
+        "en": "Build a clear long-term academic and personal growth pathway.",
+        "zh": "建立清晰的長期學業與個人成長路徑"
+      },
+      "description": {
+        "en": "We help families understand the student’s strengths, academic profile, personality, interests, and future goals, then design a practical education roadmap.",
+        "zh": "我們幫助家庭理解學生的優勢、學業背景、性格特點、興趣方向與未來目標，並據此制定可執行的教育路線圖。"
+      },
+      "points": {
+        "en": [
+          "School selection and pathway planning",
+          "Course planning and academic direction",
+          "Extracurricular and enrichment strategy",
+          "Family decision-making support"
+        ],
+        "zh": [
+          "學校選擇與路徑規劃",
+          "課程規劃與學業方向",
+          "課外活動與背景提升策略",
+          "家庭教育决策支持"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/educationstratgyconsulting.jpeg",
+        "image_alt": "Education strategy consultation",
+        "image_purpose": "Filename is spelled as uploaded in Drive.",
+        "image_status": "In Progress",
+        "image_file_name": "educationstratgyconsulting.jpeg",
+        "drive_link": "https://drive.google.com/file/d/18X54vJxSitPrS-3pSnFWS_aLXUS1YLJS/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "Education Strategy",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    },
+    {
+      "service_id": "elite-private-school",
+      "title": {
+        "en": "School Admissions",
+        "zh": "學校申請"
+      },
+      "subtitle": {
+        "en": "Personalized guidance for private school, boarding school...",
+        "zh": "為 4–19 歲學生提供私立學校與寄宿學校申請指導"
+      },
+      "description": {
+        "en": "We support families through school research, student positioning, application planning, interviews, essays, parent communication, and final school decision-making.",
+        "zh": "我們為家庭提供學校調研、學生定位、申請規劃、面試準備、文書支持、家長溝通與最終擇校決策支持，涵蓋小學、初中、高中、私立學校與寄宿學校申請。"
+      },
+      "points": {
+        "en": [
+          "School list strategy",
+          "Student profile positioning",
+          "Interview and application preparation",
+          "Parent communication and decision support"
+        ],
+        "zh": [
+          "學校名單策略",
+          "學生背景定位",
+          "面試與申請準備",
+          "家長溝通與擇校決策支持"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/prepschooladmissionconsulting.jpeg",
+        "image_alt": "School admissions consulting",
+        "image_purpose": "Direct match for prep school admissions.",
+        "image_status": "In Progress",
+        "image_file_name": "prepschooladmissionconsulting.jpeg",
+        "drive_link": "https://drive.google.com/file/d/1r6B6IlWx27tZNnv8KVrGq3SeQWJ2hCIQ/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "Prep School Admissions",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    },
+    {
+      "service_id": "school-visit-interview",
+      "title": {
+        "en": "Elite School Visit, Interview & Family Readiness Program",
+        "zh": "菁英學校深度訪校與面試準備服務"
+      },
+      "subtitle": {
+        "en": "Private school visits, interview preparation, school communication, and family decision support",
+        "zh": "為家庭提供學校參訪、面試準備、學校溝通與短期安排支持"
+      },
+      "description": {
+        "en": "We support families exploring private schools, boarding schools, and international education pathways through in-depth school visit planning, interview preparation, school communication, and family decision support. This service may include school shortlisting, campus visit planning, student and parent interview preparation, first-round interview coaching, post-visit strategy review, and coordination of vacation programs, short-term stays, or student care when needed.",
+        "zh": "我們為正在考慮私立學校、寄宿學校或國際教育路徑的家庭，提供深度訪校、學校溝通、面試準備與家庭決策支持。服務可包括學校名單規劃、校園參訪安排、學生與家長面試準備、第一輪面試輔導、訪校後策略分析，以及必要時的假期營隊、短期住宿或學生照顧協調。"
+      },
+      "points": {
+        "en": [
+          "Elite school visit and itinerary planning",
+          "Student and parent interview preparation",
+          "First-round interview coaching and mock interviews",
+          "School communication and pre-visit preparation",
+          "Post-visit school fit and decision review",
+          "Vacation camp, short-term stay, and student care coordination"
+        ],
+        "zh": [
+          "菁英學校訪校與行程規劃",
+          "學生與家長面試準備",
+          "第一輪面試輔導與模擬",
+          "學校溝通與訪校前準備",
+          "訪校後學校匹配與決策分析",
+          "假期營隊、短期住宿與學生照顧協調"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/interviewprep.jpeg",
+        "image_alt": "School visit and interview preparation",
+        "image_purpose": "Best match for school visits and interview preparation.",
+        "image_status": "In Progress",
+        "image_file_name": "interviewprep.jpeg",
+        "drive_link": "https://drive.google.com/file/d/1-QkarKeOz98dCNA5h_XsRv8c4AFyn_KN/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "School Visit & Interview Preparation",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    },
+    {
+      "service_id": "university-application",
+      "title": {
+        "en": "University Applications",
+        "zh": "大學申請"
+      },
+      "subtitle": {
+        "en": "Strategic planning for university applications, essays, activities, and academic positioning.",
+        "zh": "建立有競爭力的美國及加拿大大學申請策略"
+      },
+      "description": {
+        "en": "We help students build a strong application narrative based on academic performance, interests, extracurricular activities, leadership, personal story, and future direction.",
+        "zh": "我們幫助學生基於學業表現、興趣方向、課外活動、領導力、個人故事與未來目標，建立有競爭力的大學申請敘事。"
+      },
+      "points": {
+        "en": [
+          "Major and university fit strategy",
+          "Activity and leadership development",
+          "Essay and application narrative planning",
+          "Scholarship and financial aid strategy"
+        ],
+        "zh": [
+          "美國及加拿大大學匹配策略",
+          "活動與領導力發展",
+          "文書與申請故事線規劃",
+          "獎學金與助學金策略"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/admissionconsulting.jpeg",
+        "image_alt": "University application consulting",
+        "image_purpose": "Use for university admissions/admission consulting.",
+        "image_status": "In Progress",
+        "image_file_name": "admissionconsulting.jpeg",
+        "drive_link": "https://drive.google.com/file/d/1iMG8QGfimdnOB7OS5mLnvGtb4_iM464d/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "University Admissions",
+        "is_placeholder": "false"
+      },
+      "subsections": [
+        {
+          "title": {
+            "en": "TOEFL & IELTS Language Training",
+            "zh": "TOEFL 与 IELTS 语言培训"
+          },
+          "description": {
+            "en": "We support students with TOEFL and IELTS preparation as part of their university application planning, helping them strengthen English proficiency for admissions and academic readiness.",
+            "zh": "我们在大学申请规划中为学生提供 TOEFL 与 IELTS 备考支持，帮助学生提升申请与学术准备所需的英语能力。"
+          },
+          "points": {
+            "en": [
+              "English proficiency test preparation",
+              "Reading, writing, listening, and speaking support",
+              "Application-focused language improvement",
+              "Study planning for international students"
+            ],
+            "zh": [
+              "英语语言能力考试准备",
+              "阅读、写作、听力与口语支持",
+              "面向申请目标的语言能力提升",
+              "国际学生学习规划"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "service_id": "gpa-management",
+      "title": {
+        "en": "GPA Management",
+        "zh": "GPA 管理、選課策略與學校溝通"
+      },
+      "subtitle": {
+        "en": "Academic performance planning for stronger grades and healthier study routines.",
+        "zh": "提升學業表現，建立健康有效的學習系統"
+      },
+      "description": {
+        "en": "We help students identify academic gaps, improve study systems, plan course choices, manage workload, and build stronger communication with school and teachers.",
+        "zh": "我們幫助學生識別學業短板、改善學習系統、規劃選課、管理學習壓力，並建立更有效的學校與老師溝通方式。"
+      },
+      "points": {
+        "en": [
+          "Course selection and workload planning",
+          "Study routine and time management",
+          "Grade improvement strategy",
+          "School communication support"
+        ],
+        "zh": [
+          "選課與學習負荷規劃",
+          "學習習慣與時間管理",
+          "成績提升策略",
+          "學校溝通支持"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/gpamanagement.jpeg",
+        "image_alt": "GPA management and academic planning",
+        "image_purpose": "Preferred lowercase current update.",
+        "image_status": "In Progress",
+        "image_file_name": "gpamanagement.jpeg",
+        "drive_link": "https://drive.google.com/file/d/18e5sE_ozdIK9TdwIDqaGQqiNmA5jbTbe/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "GPA Management / Academic Skills",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    },
+    {
+      "service_id": "steam-pathway",
+      "title": {
+        "en": "STEAM Development",
+        "zh": "STEAM 發展"
+      },
+      "subtitle": {
+        "en": "Build interdisciplinary strength through science, technology, engineering, arts, and mathematics.",
+        "zh": "建立跨學科競爭力與未來學術身份"
+      },
+      "description": {
+        "en": "We help students develop project-based experiences, competition pathways, research interests, robotics exposure, creative technology skills, and long-term STEM identity.",
+        "zh": "我們幫助學生透過科學、技術、工程、藝術與數學方向，發展項目式學習經歷、競賽路徑、研究興趣、機器人方向、創意科技能力與長期 STEM/STEAM 身份定位"
+      },
+      "points": {
+        "en": [
+          "Robotics and engineering exposure",
+          "Competition and project planning",
+          "Research and innovation development",
+          "STEM identity building for applications"
+        ],
+        "zh": [
+          "機器人與工程方向探索",
+          "競賽與項目規劃",
+          "研究與創新能力發展",
+          "面向申請的 STEM/STEAM 身份塑造"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/enrichment.jpeg",
+        "image_alt": "STEAM development and enrichment",
+        "image_purpose": "Better updated name than older STEM filename.",
+        "image_status": "In Progress",
+        "image_file_name": "enrichment.jpeg",
+        "drive_link": "https://drive.google.com/file/d/1VrnwhfrXkIxbpqRGtR-Wh7HtArz9XEKQ/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "STEAM Pathway / Enrichment",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    },
+    {
+      "service_id": "student-athlete",
+      "title": {
+        "en": "Student-Athlete Planning",
+        "zh": "學生運動員規劃"
+      },
+      "subtitle": {
+        "en": "Support for students balancing academics, athletic development, and admissions goals.",
+        "zh": "在學業、運動與升學目標之間建立平衡路徑"
+      },
+      "description": {
+        "en": "We help student-athletes plan school fit, academic expectations, training schedules, athletic profiles, communication strategy, and long-term development pathways.",
+        "zh": "我們幫助學生運動員規劃學校匹配、學業要求、訓練安排、運動背景資料、教練溝通策略與長期升學發展路徑。"
+      },
+      "points": {
+        "en": [
+          "Academic and athletic balance",
+          "School and team fit strategy",
+          "Athletic profile development",
+          "Long-term training and admissions planning"
+        ],
+        "zh": [
+          "學業與運動平衡",
+          "學校與隊伍匹配策略",
+          "運動員背景資料建立",
+          "長期訓練與升學規劃"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/atheltesupport.jpeg",
+        "image_alt": "Student-athlete planning support",
+        "image_purpose": "Filename is spelled as uploaded in Drive.",
+        "image_status": "In Progress",
+        "image_file_name": "atheltesupport.jpeg",
+        "drive_link": "https://drive.google.com/file/d/1cy1LRjz3OrXyAYaUS9pverHOmdocUBdc/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "Student Athlete Planning",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    },
+    {
+      "service_id": "gifted-diverse-learning",
+      "title": {
+        "en": "Gifted, High-Potential & Neurodiverse Learner Support",
+        "zh": "高智商、高潛能與多元神經譜系學生支持"
+      },
+      "subtitle": {
+        "en": "Supportive education planning for gifted learners and students with diverse learning profiles.",
+        "zh": "為天賦型學生和具有多元學習特點的學生提供支持性教育規劃"
+      },
+      "description": {
+        "en": "We help families understand a student’s learning profile, emotional needs, strengths, challenges, school support options, enrichment opportunities, and advocacy needs.",
+        "zh": "我們幫助家庭理解學生的學習特點、情緒需求、優勢、挑戰、學校支持方式、拓展機會與權益溝通需求。"
+      },
+      "points": {
+        "en": [
+          "Strength-based student profile review",
+          "School support and accommodation guidance",
+          "Emotional and learning routine support",
+          "Family advocacy and communication strategy"
+        ],
+        "zh": [
+          "基於優勢的學生畫像分析",
+          "學校支持與 accommodation 指導",
+          "情緒與學習習慣支持",
+          "家庭倡導與溝通策略"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/neurodiversitysupport.jpeg",
+        "image_alt": "Gifted, high-potential, and neurodiverse learner support",
+        "image_purpose": "Best updated match for neurodiversity support.",
+        "image_status": "In Progress",
+        "image_file_name": "neurodiversitysupport.jpeg",
+        "drive_link": "https://drive.google.com/file/d/1dppJTQgBo4iJ_j0hbe8WTt3HleR5RH-A/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "Neurodiversity Support",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    },
+    {
+      "service_id": "mental-health-support",
+      "title": {
+        "en": "Student Mental Health Support",
+        "zh": "學生心理健康支持"
+      },
+      "subtitle": {
+        "en": "Helping students build emotional stability while navigating academic pressure and school life",
+        "zh": "支持學生在學業壓力、情緒健康與學校適應中建立更穩定的成長狀態"
+      },
+      "description": {
+        "en": "",
+        "zh": ""
+      },
+      "points": {
+        "en": [
+          "Academic stress and emotional well-being observation",
+          "School adjustment and peer relationship support",
+          "Family communication and parent-child relationship guidance",
+          "Referral suggestions for psychoeducational assessment or professional support when needed"
+        ],
+        "zh": [
+          "學業壓力與情緒狀態觀察",
+          "學校適應與人際關係支持",
+          "家庭溝通與親子關係協調",
+          "必要時提供心理教育評估與專業資源轉介建議"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/mentalhealthsupport.jpeg",
+        "image_alt": "Student mental health support",
+        "image_purpose": "Use newer duplicate by modified time.",
+        "image_status": "In Progress",
+        "image_file_name": "mentalhealthsupport.jpeg",
+        "drive_link": "https://drive.google.com/file/d/1hB90xZcyEcq8D8AHUGVGyvE41UnzYn2c/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply if website has this section",
+        "source_section": "Mental Health Support",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    },
+    {
+      "service_id": "short-term-guardianship",
+      "title": {
+        "en": "Short-Term Guardianship & Student Care Support",
+        "zh": "短期監護與學生照顧支持"
+      },
+      "subtitle": {
+        "en": "Stable and caring support for students when parents are temporarily away",
+        "zh": "在父母短期不在身邊時，為學生提供穩定、安全與有溫度的照顧支持"
+      },
+      "description": {
+        "en": "We support families when parents are temporarily outside Canada, traveling, returning home, or unable to manage student matters in person. Our short-term guardianship and student care support may include school communication, emergency contact support, daily care coordination, regular family updates, and assistance with school, medical, or accommodation-related matters when needed.",
+        "zh": "我們為父母短期不在加拿大、臨時出差、返國或無法親自處理學生事務的家庭，提供短期監護與學生照顧支持。服務可包括學校溝通、緊急聯絡、生活安排協調、家長定期回報，以及必要時協助處理醫療、學校或住宿相關事務，幫助學生在父母不在身邊期間保持學業、生活與情緒穩定。"
+      },
+      "points": {
+        "en": [
+          "Short-term guardianship arrangement",
+          "Communication with schools and teachers",
+          "Emergency contact and accompaniment support",
+          "Daily student care coordination",
+          "Regular updates while parents are away",
+          "Support with school, medical, or accommodation-related matters when needed"
+        ],
+        "zh": [
+          "短期監護安排",
+          "學校與老師溝通",
+          "緊急聯絡與陪同支持",
+          "學生日常生活協調",
+          "家長不在期間的定期回報",
+          "必要時協助學校、醫療或住宿相關事務"
+        ]
+      },
+      "image": {
+        "image_url": "/assets/images/services/gardianship.jpeg",
+        "image_alt": "Short-term guardianship and student care",
+        "image_purpose": "Filename is misspelled in Drive; link is stable.",
+        "image_status": "In Progress",
+        "image_file_name": "gardianship.jpeg",
+        "drive_link": "https://drive.google.com/file/d/1wuZ12KQqo7MKhfSMcWocdWx_MHCh79DW/view?usp=drivesdk",
+        "live_image_rule": "Do not replace existing live image",
+        "recommended_action": "Apply to service page or block",
+        "source_section": "Guardianship / Student Care",
+        "is_placeholder": "false"
+      },
+      "subsections": []
+    }
+  ]
+}

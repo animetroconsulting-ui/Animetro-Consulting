@@ -123,7 +123,8 @@ GOOGLE_WORKLOAD_IDENTITY_PROVIDER
 
 Use the provider resource name from the `echo` command as the value.
 
-No JSON key is needed for the update-log workflow. The separate content-sync workflow uses `GOOGLE_SERVICE_ACCOUNT_JSON`.
+No JSON key is needed for the update-log workflow or the content-sync workflow
+when Workload Identity Federation is configured.
 
 Optional repository variable:
 

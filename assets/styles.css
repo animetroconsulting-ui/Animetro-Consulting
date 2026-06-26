@@ -214,6 +214,8 @@ p {
   margin-top: 16px;
   font-size: clamp(1.02rem, 1.55vw, 1.16rem);
   max-width: 720px;
+  line-height: 1.65;
+  overflow-wrap: break-word;
 }
 
 .actions {
@@ -257,6 +259,10 @@ p {
   color: #fff;
   font-size: 0.98rem;
   font-weight: 700;
+  max-width: 100%;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
 }
 
 .button.secondary {
@@ -312,6 +318,7 @@ p {
   font-size: clamp(1.12rem, 1.45vw, 1.3rem);
   font-weight: 800;
   line-height: 1.3;
+  overflow-wrap: break-word;
 }
 
 .hero-card .service-summary {
@@ -554,6 +561,7 @@ p {
 .service-image img {
   object-fit: contain;
   object-position: center;
+  background: #f7f7f7;
 }
 
 .event-image img {
@@ -576,6 +584,7 @@ p {
   border-radius: 8px;
   background: var(--panel);
   scroll-margin-top: 96px;
+  overflow-wrap: break-word;
 }
 
 .service-detail p {
@@ -1417,6 +1426,14 @@ p {
     min-height: auto;
   }
 
+  .service-detail {
+    padding: 22px;
+  }
+
+  .service-image img {
+    height: clamp(190px, 52vw, 280px);
+  }
+
   .process-grid {
     grid-template-columns: 1fr;
   }
@@ -1528,5 +1545,9 @@ p {
 @media (max-width: 620px) {
   .hero-media img {
     height: 230px;
+  }
+
+  .service-detail {
+    padding: 18px;
   }
 }

@@ -44,13 +44,29 @@ The website content sync can export the latest Google Sheet into:
 content/website-content.csv
 ```
 
-Then it updates the static website files from that CSV.
+It also exports the `Website Images` tab into:
+
+```text
+content/service-images.csv
+```
+
+The sync script combines the website copy and service image rows into:
+
+```text
+content/services.json
+```
+
+The Services pages are regenerated from `content/services.json`, not manually
+hardcoded service cards. Each service image supports `image_url`, `image_alt`,
+`image_purpose`, `image_status`, and `image_file_name`. If a configured local
+image is missing, the generator renders a safe placeholder image so the layout
+does not break.
 
 Required GitHub repository secrets for the automatic sync workflow:
 
 ```text
 GOOGLE_SHEET_ID
-GOOGLE_SERVICE_ACCOUNT_JSON
+GOOGLE_WORKLOAD_IDENTITY_PROVIDER
 GOOGLE_DRIVE_FOLDER_ID
 ```
 
@@ -58,6 +74,7 @@ Optional repository variable:
 
 ```text
 GOOGLE_SHEET_TAB_NAME
+GOOGLE_SERVICE_IMAGES_TAB_NAME
 ```
 
 Default:
@@ -70,7 +87,11 @@ Manual local run:
 
 ```bash
 python3 scripts/sync_website_content.py
+python3 scripts/verify_static_site.py
 ```
+
+The static verifier replaces browser-based visual checks in CI, so the workflow
+does not require a Playwright browser binary.
 
 GitHub Action:
 
@@ -123,7 +144,10 @@ To add the same value in Vercel:
 GOOGLE_DRIVE_FOLDER_ID = 1_-jbZCPZBW8HgVVGdnOr6WsOw95NJhS_
 ```
 
-Keep `GOOGLE_SERVICE_ACCOUNT_JSON` in GitHub Secrets only. Do not commit it into the repository.
+The GitHub workflow authenticates to Google with Workload Identity Federation.
+Do not paste a private key into `GOOGLE_SERVICE_ACCOUNT_JSON` for the scheduled
+sync. For local-only runs, `GOOGLE_SERVICE_ACCOUNT_JSON` may still be set to the
+full service-account JSON or base64-encoded service-account JSON.
 
 ## Vercel Deployment
 
@@ -313,7 +337,8 @@ GOOGLE_WORKLOAD_IDENTITY_PROVIDER
 
 Use the provider resource name from the `echo` command as the value.
 
-No JSON key is needed for the update-log workflow. The separate content-sync workflow uses `GOOGLE_SERVICE_ACCOUNT_JSON`.
+No JSON key is needed for the update-log workflow or the content-sync workflow
+when Workload Identity Federation is configured.
 
 Optional repository variable:
 
